@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+<body>
+    <div>
+        <h1>Chatbot</h1>
+        <div id="chat-container"></div>
+        <form id="message-form">
+            <label for="message">You:</label>
+            <input type="text" id="message" name="message" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#message-form').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                sendMessage(formData);
+            });
+        });
+
+        function sendMessage(formData) {
+            $.ajax({
+                type: 'POST',
+                url: '/chat',
+                data: formData,
+                success: function(response) {
+                    $('#chat-container').append('<p><strong>You:</strong> ' + response.user_input + '</p>');
+                    $('#chat-container').append('<p><strong>Bot:</strong> ' + response.response + '</p>');
+                    $('#message').val('');
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
